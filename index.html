@@ -1,174 +1,339 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Lavanya Itikala</title>
-    <link rel="icon" type="image/x-icon" href="assets/images/ball.png" />
-    <link rel="stylesheet" href="assets/css/styles.css" />
-  </head>
-  <body>
-    <div class="container">
-      <div class="header-row"> 
-        <div class="box"><h1>Lavanya Itikala</h1></div>
-        <div class="box">
-          <ul>
-            <li><a href="#home">Home</a></li>
-            <li><a href="#projects">Projects</a></li>
-            <li><a href="#services">Services</a></li>
-            <li><a href="#about">About</a></li>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S R Kiranam Billing System</title>
+    
+    <!-- Tailwind CSS for Styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- React and ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    
+    <!-- Babel for translating JSX in the browser -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-            <li><a href="#contact">Contact</a></li>
-          </ul>
-        </div>
-      </div>
+    <style>
+        @keyframes bounce-in {
+            0% { transform: scale(0.95); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .animate-bounce-in {
+            animation: bounce-in 0.3s ease-out forwards;
+        }
+        /* Hide scrollbar for clean UI */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
 
-      <div class="row" id="home">
-        <div style="display: flex;padding-top: 50px;">
-          <div class="box">
-            <h1>Full Stack Developer</h1>
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt
-              neque est nihil ipsum error. Deserunt voluptas explicabo ea eum
-              quasi. Rem nisi molestias quia nesciunt incidunt numquam fugiat
-              perferendis assumenda?
-            </p>
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt
-              neque est nihil ipsum error. Deserunt voluptas explicabo ea eum
-              quasi. Rem nisi molestias quia nesciunt incidunt numquam fugiat
-              perferendis assumenda?
-            </p>
-            <button>Button 1</button>
-            <button>Button 1</button>
-          </div>
-          <div class="box">
-            <img src="https://picsum.photos/id/2/400/400" />
-          </div>
-        </div>
-      </div>
+    <div id="root"></div>
 
-      <div id="projects" class="row" style="background-color: lightcoral">
-        <h1>Projects</h1>
-        <div style="display: flex">
-          <div class="box">
-            <h3>Project 1</h3>
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem
-              quia nobis eligendi reiciendis. Esse a possimus eum est veritatis
-              aliquid ut eveniet. Et illum odio ut voluptates molestiae?
-              Perspiciatis, ab.
-            </p>
-          </div>
+    <script type="text/babel">
+        const { useState, useEffect } = React;
 
-          <div class="box">
-            <h3>Project 2</h3>
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem
-              quia nobis eligendi reiciendis. Esse a possimus eum est veritatis
-              aliquid ut eveniet. Et illum odio ut voluptates molestiae?
-              Perspiciatis, ab.
-            </p>
-          </div>
+        // --- Simple Icons (Replaces Lucide for standalone file) ---
+        const Icons = {
+            ShoppingCart: () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>,
+            Phone: () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>,
+            CheckCircle: () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>,
+            AlertCircle: () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>,
+            Trash2: () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>,
+            Printer: () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>,
+            ArrowLeft: () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>,
+            Send: () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>,
+            Package: () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>,
+            Plus: () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>,
+            Minus: () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        };
 
-          <div class="box">
-            <h3>Project 3</h3>
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem
-              quia nobis eligendi reiciendis. Esse a possimus eum est veritatis
-              aliquid ut eveniet. Et illum odio ut voluptates molestiae?
-              Perspiciatis, ab.
-            </p>
-          </div>
-        </div>
-      </div>
-      <div id="services" class="row" style="background-color: lightblue">
-        <h1>Services</h1>
-        <div style="display: flex">
-          <div class="box">
-            <h3>Web App Development</h3>
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem
-              quia nobis eligendi reiciendis. Esse a possimus eum est veritatis
-              aliquid ut eveniet. Et illum odio ut voluptates molestiae?
-              Perspiciatis, ab.
-            </p>
-          </div>
+        const BillingApp = () => {
+            // Initial Product Data
+            const initialProducts = [
+                { id: 'rice', name: 'Rice', price: 60.00, stock: 50, icon: '🍚', unit: 'kg' },
+                { id: 'maida', name: 'Maida', price: 35.00, stock: 100, icon: '🌾', unit: 'kg' },
+                { id: 'milk', name: 'Milk', price: 60.00, stock: 80, icon: '🥛', unit: 'L' },
+                { id: 'oil', name: 'Oil Packet', price: 160.00, stock: 40, icon: '🛢️', unit: 'pkt' },
+                { id: 'chilli', name: 'Chilli Powder', price: 240.00, stock: 30, icon: '🌶️', unit: 'kg' },
+                { id: 'chocolate', name: 'Chocolate', price: 10.00, stock: 20, icon: '🍫', unit: 'pc' },
+                { id: 'chips', name: 'Chips', price: 15.00, stock: 10, icon: '🥔', unit: 'pkt' },
+                { id: 'thumsup', name: 'Thums Up', price: 110.00, stock: 25, icon: '🥤', unit: 'btl' },
+            ];
 
-          <div class="box">
-            <h3>Mobile App Development</h3>
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem
-              quia nobis eligendi reiciendis. Esse a possimus eum est veritatis
-              aliquid ut eveniet. Et illum odio ut voluptates molestiae?
-              Perspiciatis, ab.
-            </p>
-          </div>
+            const [products, setProducts] = useState(initialProducts);
+            const [cart, setCart] = useState([]);
+            const [view, setView] = useState('shop'); 
+            const [notification, setNotification] = useState(null);
+            const [phoneNumber, setPhoneNumber] = useState('');
+            const [smsStatus, setSmsStatus] = useState('idle');
 
-          <div class="box">
-            <h3>Backend Development</h3>
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem
-              quia nobis eligendi reiciendis. Esse a possimus eum est veritatis
-              aliquid ut eveniet. Et illum odio ut voluptates molestiae?
-              Perspiciatis, ab.
-            </p>
-          </div>
-        </div>
-      </div>
-      <div id="about" class="row">
-        <h1>About</h1>
-        <h3>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Facere sint
-          optio labore a obcaecati. Ullam distinctio corrupti autem. Veritatis
-          ipsa veniam deserunt asperiores nesciunt at provident itaque
-          cupiditate vel dolor.
-        </h3>
-        <h2>Skills</h2>
-        <h3>Java, Python, Reactjs</h3>
-        <p>Display the logo of all the technologies you know.</p>
-      </div>
-      <div
-        id="contact"
-        class="row"
-        style="background-color: lightgoldenrodyellow"
-      >
-        <h1>Contact</h1>
-        <div style="display: flex">
-         
+            const showNotification = (message, type = 'success') => {
+                setNotification({ message, type });
+                setTimeout(() => setNotification(null), 3000);
+            };
 
-          <div class="box">
-            <h3>Contact Form</h3>
-            <p>
-             <input type="text" placeholder="Enter Name">
-            </p>
-            <p>
-              <input type="email" placeholder="Enter Email">
-             </p>
-             <p>
-              <textarea rows="10" cols="60" placeholder="Enter message"></textarea>
-             </p>
-             <button>Send</button>
-          </div>
+            const addToCart = (product, quantity) => {
+                if (quantity <= 0) return;
+                if (quantity > product.stock) {
+                    showNotification(`Only ${product.stock} ${product.unit} available!`, 'error');
+                    return;
+                }
 
-          <div class="box">
-            <h3>Your/Company Name</h3>
-            <p>
-              <b>Address: </b>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem
-              quia nobis eligendi reiciendis. Esse a possimus eum est veritatis
-              aliquid ut eveniet. Et illum odio ut voluptates molestiae?
-              Perspiciatis, ab.
-            </p>
-            <p>
-              <b>Email Address: </b>sample@email.com
-            </p>
-            <p>
-              <b>Phone Number: </b>+91 343 445 6789
-            </p>
-          </div> 
-        </div>
-      </div>
-      <div class="footer">@copyright 2024. All rights reserved.</div>
-    </div>
-  </body>
+                const updatedProducts = products.map(p => 
+                    p.id === product.id ? { ...p, stock: p.stock - quantity } : p
+                );
+                setProducts(updatedProducts);
+
+                const existingItem = cart.find(item => item.id === product.id);
+                if (existingItem) {
+                    setCart(cart.map(item => 
+                        item.id === product.id ? { ...item, quantity: item.quantity + quantity } : item
+                    ));
+                } else {
+                    setCart([...cart, { ...product, quantity }]);
+                }
+                showNotification(`Added ${quantity} ${product.unit} of ${product.name}`, 'success');
+            };
+
+            const removeFromCart = (itemId) => {
+                const itemToRemove = cart.find(item => item.id === itemId);
+                if (!itemToRemove) return;
+
+                const updatedProducts = products.map(p => 
+                    p.id === itemId ? { ...p, stock: p.stock + itemToRemove.quantity } : p
+                );
+                setProducts(updatedProducts);
+                setCart(cart.filter(item => item.id !== itemId));
+            };
+
+            const cartTotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+            const handleSendSMS = () => {
+                if (!/^\d{10}$/.test(phoneNumber)) {
+                    showNotification('Please enter a valid 10-digit number', 'error');
+                    return;
+                }
+
+                setSmsStatus('sending');
+                const date = new Date().toLocaleDateString();
+                const header = `🧾 S R Kiranam Bill (${date})\n----------------\n`;
+                const itemsList = cart.map(item => 
+                    `${item.name} x${item.quantity} : ₹${(item.price * item.quantity).toFixed(0)}`
+                ).join('\n');
+                const footer = `\n----------------\nTotal: ₹${cartTotal.toFixed(2)}\nThank you for shopping! 🙏`;
+                
+                const fullMessage = encodeURIComponent(header + itemsList + footer);
+                
+                setTimeout(() => {
+                    window.location.href = `sms:+91${phoneNumber}?body=${fullMessage}`;
+                    setSmsStatus('sent');
+                    showNotification(`Opened SMS app for +91 ${phoneNumber}`, 'success');
+                    setPhoneNumber('');
+                    setTimeout(() => setSmsStatus('idle'), 3000);
+                }, 800);
+            };
+
+            // --- Sub Components ---
+            const ProductCard = ({ product }) => {
+                const [qty, setQty] = useState(1);
+                return (
+                    <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow duration-200 flex flex-col">
+                        <div className="h-32 bg-orange-50 flex items-center justify-center text-5xl relative">
+                            {product.icon}
+                            <div className="absolute top-2 right-2 bg-white px-2 py-1 rounded-full text-xs font-bold text-gray-600 shadow-sm">
+                                Stock: {product.stock}
+                            </div>
+                        </div>
+                        <div className="p-4 flex flex-col flex-grow">
+                            <h3 className="font-bold text-lg text-gray-800 mb-1">{product.name}</h3>
+                            <p className="text-orange-600 font-bold mb-4">₹{product.price.toFixed(2)} <span className="text-gray-400 text-sm font-normal">/ {product.unit}</span></p>
+                            
+                            <div className="mt-auto">
+                                <div className="flex items-center justify-between bg-gray-50 rounded-lg p-1 mb-3">
+                                    <button onClick={() => setQty(Math.max(1, qty - 1))} className="p-2 hover:bg-white rounded-md transition-colors text-gray-600"><Icons.Minus/></button>
+                                    <span className="font-semibold w-8 text-center">{qty}</span>
+                                    <button onClick={() => setQty(Math.min(product.stock, qty + 1))} className="p-2 hover:bg-white rounded-md transition-colors text-gray-600"><Icons.Plus/></button>
+                                </div>
+                                <button
+                                    onClick={() => { addToCart(product, qty); setQty(1); }}
+                                    disabled={product.stock === 0}
+                                    className={`w-full py-2 rounded-lg font-semibold flex items-center justify-center gap-2 transition-all active:scale-95
+                                        ${product.stock === 0 
+                                        ? 'bg-gray-200 text-gray-400 cursor-not-allowed' 
+                                        : 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-200'}`}
+                                >
+                                    {product.stock === 0 ? 'Out of Stock' : <><Icons.ShoppingCart /> Add</>}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                );
+            };
+
+            const BillView = () => (
+                <div className="max-w-2xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden my-8 border border-gray-200">
+                    <div className="bg-indigo-600 p-6 text-white text-center relative overflow-hidden">
+                        <div className="absolute top-0 left-0 w-full h-full opacity-10 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white via-transparent to-transparent"></div>
+                        <h2 className="text-2xl font-bold mb-2 relative z-10">S R KIRANAM & GENERAL STORES</h2>
+                        <p className="opacity-90 relative z-10">Prop. SRINIVASREDDY • 📞 6301508191</p>
+                        <div className="mt-4 inline-block px-4 py-1 bg-indigo-800 rounded-full text-sm relative z-10">Official Invoice</div>
+                    </div>
+
+                    <div className="p-6">
+                        <div className="overflow-x-auto">
+                            <table className="w-full mb-6">
+                                <thead>
+                                    <tr className="text-left text-gray-500 text-sm border-b border-gray-200">
+                                        <th className="pb-3 font-medium">Item</th>
+                                        <th className="pb-3 font-medium text-center">Qty</th>
+                                        <th className="pb-3 font-medium text-right">Price</th>
+                                        <th className="pb-3 font-medium text-right">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-gray-100">
+                                    {cart.map((item) => (
+                                        <tr key={item.id}>
+                                            <td className="py-3 flex items-center gap-2">
+                                                <span className="text-lg">{item.icon}</span>
+                                                <span className="font-medium text-gray-800">{item.name}</span>
+                                            </td>
+                                            <td className="py-3 text-center text-gray-600">{item.quantity} {item.unit}</td>
+                                            <td className="py-3 text-right text-gray-600">₹{item.price.toFixed(2)}</td>
+                                            <td className="py-3 text-right font-semibold text-gray-800">₹{(item.price * item.quantity).toFixed(2)}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                                <tfoot>
+                                    <tr className="border-t-2 border-gray-100">
+                                        <td colSpan="3" className="pt-4 text-right font-bold text-gray-600">Grand Total:</td>
+                                        <td className="pt-4 text-right font-bold text-2xl text-indigo-600">₹{cartTotal.toFixed(2)}</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+
+                        <div className="bg-gray-50 rounded-xl p-6 border border-gray-100">
+                            <h4 className="font-bold text-gray-700 mb-3 flex items-center gap-2"><Icons.Phone /> Send Digital Receipt</h4>
+                            <div className="flex gap-2">
+                                <input 
+                                    type="tel" 
+                                    placeholder="Enter customer phone (10 digits)"
+                                    className="flex-grow px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 outline-none"
+                                    value={phoneNumber}
+                                    onChange={(e) => setPhoneNumber(e.target.value.replace(/\D/g,'').slice(0,10))}
+                                />
+                                <button 
+                                    onClick={handleSendSMS}
+                                    disabled={smsStatus !== 'idle' || cart.length === 0}
+                                    className={`px-6 py-2 rounded-lg font-semibold text-white flex items-center gap-2 transition-all
+                                        ${smsStatus === 'sent' ? 'bg-green-500' : 'bg-gray-900 hover:bg-gray-800'}`}
+                                >
+                                    {smsStatus === 'sending' ? '...' : smsStatus === 'sent' ? <><Icons.CheckCircle /> Sent</> : <><Icons.Send /> SMS</>}
+                                </button>
+                            </div>
+                        </div>
+
+                        <div className="mt-8 flex gap-3">
+                            <button onClick={() => setView('shop')} className="flex-1 py-3 rounded-lg border-2 border-gray-200 font-semibold text-gray-600 hover:bg-gray-50 flex items-center justify-center gap-2"><Icons.ArrowLeft /> Back</button>
+                            <button onClick={() => window.print()} className="flex-1 py-3 rounded-lg bg-indigo-600 text-white font-semibold hover:bg-indigo-700 flex items-center justify-center gap-2 shadow-lg"><Icons.Printer /> Print</button>
+                        </div>
+                    </div>
+                </div>
+            );
+
+            return (
+                <div className="min-h-screen bg-gray-50 font-sans pb-20">
+                    {notification && (
+                        <div className={`fixed top-4 right-4 z-50 px-6 py-3 rounded-lg shadow-lg text-white font-medium flex items-center gap-2 animate-bounce-in ${notification.type === 'error' ? 'bg-red-500' : 'bg-green-600'}`}>
+                            {notification.type === 'error' ? <Icons.AlertCircle /> : <Icons.CheckCircle />}
+                            {notification.message}
+                        </div>
+                    )}
+
+                    <header className="bg-white shadow-sm sticky top-0 z-40">
+                        <div className="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+                            <div>
+                                <h1 className="text-xl md:text-2xl font-bold text-indigo-900">S R Kiranam</h1>
+                                <p className="text-xs text-gray-500 font-medium tracking-wider hidden sm:block">GENERAL STORES & WHOLESALE</p>
+                            </div>
+                            {view === 'shop' && (
+                                <button onClick={() => cart.length > 0 && setView('bill')} className="relative bg-indigo-50 text-indigo-700 px-4 py-2 rounded-lg font-semibold hover:bg-indigo-100 flex items-center gap-2">
+                                    <Icons.ShoppingCart /> <span className="hidden sm:inline">Cart</span>
+                                    {cart.length > 0 && <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold w-6 h-6 rounded-full flex items-center justify-center border-2 border-white">{cart.reduce((acc, item) => acc + item.quantity, 0)}</span>}
+                                </button>
+                            )}
+                        </div>
+                    </header>
+
+                    <main className="max-w-6xl mx-auto px-4 py-6">
+                        {view === 'shop' ? (
+                            <div className="flex flex-col lg:flex-row gap-8">
+                                <div className="flex-grow">
+                                    <div className="flex items-center justify-between mb-6">
+                                        <h2 className="text-xl font-bold text-gray-800 flex items-center gap-2"><Icons.Package /> Products</h2>
+                                        <span className="text-sm text-gray-500 bg-white px-3 py-1 rounded-full border border-gray-200">{products.length} items available</span>
+                                    </div>
+                                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                                        {products.map(product => <ProductCard key={product.id} product={product} />)}
+                                    </div>
+                                </div>
+                                <div className="hidden lg:block w-80 flex-shrink-0">
+                                    <div className="bg-white rounded-xl shadow-sm border border-gray-200 sticky top-24 p-4">
+                                        <h3 className="font-bold text-gray-800 mb-4 pb-2 border-b border-gray-100">Current Cart</h3>
+                                        {cart.length === 0 ? (
+                                            <div className="text-center py-8 text-gray-400"><p>Your cart is empty</p></div>
+                                        ) : (
+                                            <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2">
+                                                {cart.map(item => (
+                                                    <div key={item.id} className="flex items-center justify-between group">
+                                                        <div className="flex items-center gap-2">
+                                                            <div className="w-8 h-8 bg-gray-100 rounded flex items-center justify-center text-lg">{item.icon}</div>
+                                                            <div><p className="text-sm font-medium text-gray-800">{item.name}</p><p className="text-xs text-gray-500">x {item.quantity}</p></div>
+                                                        </div>
+                                                        <div className="flex items-center gap-3">
+                                                            <span className="text-sm font-semibold">₹{(item.price * item.quantity).toFixed(0)}</span>
+                                                            <button onClick={() => removeFromCart(item.id)} className="text-gray-300 hover:text-red-500 opacity-0 group-hover:opacity-100"><Icons.Trash2 /></button>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
+                                        {cart.length > 0 && (
+                                            <div className="mt-4 pt-4 border-t border-gray-100">
+                                                <div className="flex justify-between items-center mb-4"><span className="text-gray-600">Total</span><span className="text-xl font-bold text-indigo-600">₹{cartTotal.toFixed(2)}</span></div>
+                                                <button onClick={() => setView('bill')} className="w-full bg-gray-900 text-white py-3 rounded-lg font-semibold hover:bg-gray-800">Checkout</button>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        ) : <BillView />}
+                    </main>
+                    {view === 'shop' && cart.length > 0 && (
+                        <div className="fixed bottom-4 left-4 right-4 lg:hidden">
+                            <div className="bg-gray-900 text-white p-4 rounded-xl shadow-2xl flex items-center justify-between cursor-pointer" onClick={() => setView('bill')}>
+                                <div className="flex items-center gap-3">
+                                    <div className="bg-gray-800 w-10 h-10 rounded-full flex items-center justify-center font-bold">{cart.reduce((acc, item) => acc + item.quantity, 0)}</div>
+                                    <div className="flex flex-col"><span className="text-sm text-gray-300">Total Amount</span><span className="font-bold text-lg">₹{cartTotal.toFixed(2)}</span></div>
+                                </div>
+                                <button className="bg-indigo-600 px-4 py-2 rounded-lg font-semibold text-sm">Checkout</button>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<BillingApp />);
+    </script>
+</body>
 </html>
